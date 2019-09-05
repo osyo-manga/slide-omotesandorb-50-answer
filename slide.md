@@ -43,7 +43,8 @@
   * 例えば Elixir の場合は
   * f() |> g(a, b) は g(f(), a, b) と同じ意味になる
   * |> の右辺を左辺の関数の第一引数に置き換える
-* 詳しくは [パイプライン演算子の歴史 - まめめも](https://mametter.hatenablog.com/entry/2019/06/15/192311)        <!-- .element: class="fragment" -->
+* 詳しくは         <!-- .element: class="fragment" -->
+  * [パイプライン演算子の歴史 - まめめも](https://mametter.hatenablog.com/entry/2019/06/15/192311)   
 
 ---
 
@@ -147,11 +148,11 @@ pp [4, 16, 64, 256].map &Math.:sqrt
 #### 経緯
 - - -
 
-* bugs.ruby に issues があった
+* bugs.ruby に issues があった         <!-- .element: class="fragment" -->
   * [Feature #15991: Allow questionmarks in variable names - Ruby master - Ruby Issue Tracking System](https://bugs.ruby-lang.org/issues/15991)
-* 前回の開発者会議で提案してみたが、実装が難しいとのこと
+* 前回の開発者会議で提案してみたが、実装が難しいとのこと         <!-- .element: class="fragment" -->
   * 条件演算子や複数割り当てなどと競合する可能性がある
-* ちなみにインスタンス変数に関しては matz が否定している
+* ちなみにインスタンス変数に関しては matz が否定している         <!-- .element: class="fragment" -->
   * [Feature #5781: Query attributes (attribute methods ending in `?` mark) - Ruby master - Ruby Issue Tracking System](https://bugs.ruby-lang.org/issues/5781)
 
 
@@ -166,16 +167,17 @@ pp [4, 16, 64, 256].map &Math.:sqrt
 #### describe / context
 - - -
 
-* テストのスコープを切り分ける機能
+* テストのスコープを切り分ける機能     <!-- .element: class="fragment" -->
   * 名前が違うだけで機能としては同等
-* describe は『テスト対象』
+* describe は『テスト対象』     <!-- .element: class="fragment" -->
   * クラス名やメソッド名
   * reqeust spec であれば `describe "GET /users"` とか
-* context は『テストケース』
+* context は『テストケース』     <!-- .element: class="fragment" -->
   * テストケース
   * 引数が○○○の場合
-* コンテキストごとにグループ化していく感じ
+* コンテキストごとにグループ化していく感じ     <!-- .element: class="fragment" -->
   * 横に長いよりも縦に長くしていくほうが context が複雑にならずみやすいかも?
+  * 複雑だと context を追加する場合に悩んでしまう
 
 >>>
 
@@ -236,12 +238,12 @@ end
 #### let / let! / before
 - - -
 
-* before は初期化処理を定義する
-* let / let! は context に依存する値を定義する
+* before は初期化処理を定義する     <!-- .element: class="fragment" -->
+* let / let! は context に依存する値を定義する     <!-- .element: class="fragment" -->
   * 普通のメソッドとは違いメモ化される
   * let は参照されるまで処理は呼び出されない
   * let! は before と同じタイミングで呼び出される
-* テストを実行する前に初期化しつつ、その結果を取得したい場合に let を使う
+* テストを実行する前に初期化しつつ、その結果を取得したい場合に let を使う     <!-- .element: class="fragment" -->
 
 >>>
 
@@ -350,15 +352,8 @@ end
 
 ---
 
-#### まとめ
+#### let! つらいポイント
 - - -
-
-* let は context に依存するようなものを定義する
-* before は共通の初期化処理を行いたい場合に使用する
-  * ただし、 before は必ず実行されるのであまり広い context で使用せずに狭い範囲で使用する方が変な副作用がなくてよい
-* let! も before と同様に必ず実行されるので気をつけて使用する
-
->>>
 
 ```ruby
 let!(:user) { User.create(name: "homu") }
@@ -382,7 +377,10 @@ context "複雑なユーザを定義する" do
 end
 ```
 
->>>
+---
+
+#### before つらいポイント
+- - -
 
 ```ruby
 before do
@@ -392,9 +390,9 @@ end
 
 context "ユーザが存在しない場合" do
   it "ユーザ情報が表示されないこと" do
+    expect(response.body).not_to include "homu"
   end
 end
-
 context "ユーザが存在する場合" do
   before do
     # get を呼び出す前にリソースを生成したい
@@ -403,9 +401,20 @@ context "ユーザが存在する場合" do
     User.create(name: "homu")
   end
   it "ユーザ情報が表示されていること" do
+    expect(response.body).not_to include "homu"
   end
 end
 ```
+
+---
+
+#### まとめ
+- - -
+
+* let は context に依存するようなものを定義する          <!-- .element: class="fragment" -->
+* before は共通の初期化処理を行いたい場合に使用する          <!-- .element: class="fragment" -->
+  * ただし、 before は必ず実行されるのであまり広い context で使用せずに狭い範囲で使用する方が変な副作用がなくてよい
+* let! も before と同様に必ず実行されるので気をつけて使用する          <!-- .element: class="fragment" -->
 
 ---
 
@@ -417,7 +426,7 @@ end
 - - -
 
 * [Ruby Hack Challenge Holiday](https://rhc.connpass.com/event/145802/) というイベントをやっています
-* Ruby 本体を自分でビルドしたりハックしたりするイベント       <!-- .element: class="fragment" -->
+* Ruby 本体を自分でビルドしたりハックしたりするイベント           <!-- .element: class="fragment" -->
 * Ruby のコミッタの方が主催しているので Ruby について聞けるチャンス       <!-- .element: class="fragment" -->
 * Ruby 本体の開発に興味がある人はぜひ！！       <!-- .element: class="fragment" -->
 * 次回は 10/06(日) 開催予定       <!-- .element: class="fragment" -->

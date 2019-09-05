@@ -406,6 +406,27 @@ context "ユーザが存在する場合" do
 end
 ```
 
+>>>
+
+```ruby
+subject { get "/users"  }
+
+context "ユーザが存在しない場合" do
+  it "ユーザ情報が表示されないこと" do
+    # どう書くべきか？？？
+    # it { expect { subject }.to change { response.body }.to include "homu" }
+  end
+end
+context "ユーザが存在する場合" do
+  before do
+    User.create(name: "homu")
+  end
+  it "ユーザ情報が表示されていること" do
+    expect { subject }.to change { response.body }.to include "homu"
+  end
+end
+```
+
 ---
 
 #### まとめ

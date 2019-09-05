@@ -35,15 +35,15 @@
 #### パイプラインオペレータとは
 - - -
 
-* |> を使って hoge(a, b).foo を hoge(a, b) |> foo とかける演算子
+* |> を使って hoge(a, b).foo を hoge(a, b) |> foo とかける演算子       <!-- .element: class="fragment" -->
   * . 演算子と同等の演算子
   * . 演算子よりも優先順位が低いので
   * hoge(a, b).foo を hoge a, b |> foo とかけるのが利点
-* いわゆる関数型言語にあるようなパイプラインオペレーターとは用途がちょっと違う
-* 例えば Elixir の場合は
+* いわゆる関数型言語にあるようなパイプラインオペレーターとは用途がちょっと違う       <!-- .element: class="fragment" -->
+  * 例えば Elixir の場合は
   * f() |> g(a, b) は g(f(), a, b) と同じ意味になる
   * |> の右辺を左辺の関数の第一引数に置き換える
-* 詳しくは [パイプライン演算子の歴史 - まめめも](https://mametter.hatenablog.com/entry/2019/06/15/192311)
+* 詳しくは [パイプライン演算子の歴史 - まめめも](https://mametter.hatenablog.com/entry/2019/06/15/192311)        <!-- .element: class="fragment" -->
 
 ---
 
@@ -105,7 +105,7 @@ pp %w(72 101 108 108 111).map &:to_i.to_proc >> :chr.to_proc
 pp %w(72 101 108 108 111).map { _1.to_i.chr }
 ```
 
->>>
+---
 
 #### .: 演算子
 - - -
@@ -269,7 +269,10 @@ it do
 end
 ```
 
->>>
+---
+
+#### let の使用例
+- - -
 
 ```ruby
 describe "#[]" do
@@ -280,17 +283,14 @@ describe "#[]" do
     let(:index) { 0 }
     it { expect(subject).to eq 1 }
   end
-
   context "`-1` を渡した場合" do
     let(:index) { -1 }
     it { expect(subject).to eq 3 }
   end
-
   context "文字列を渡した場合" do
     let(:index) { "" }
     it { expect { subject }.to raise_error TypeError }
   end
-
   context "空の配列に `0` を渡した場合" do
     let(:array) { [] }
     let(:index) { 0 }
@@ -299,9 +299,9 @@ describe "#[]" do
 end
 ```
 
->>>
+---
 
-#### before の仕様例
+#### before の使用例
 - - -
 
 ```ruby
@@ -319,6 +319,31 @@ describe "バリデーションのテスト" do
   context "既存のユーザと別名で生成した場合" do
     let(:name) { "mami" }
     is { expect(subject).to be_valid }
+  end
+end
+```
+
+---
+
+
+#### let! の使用例
+- - -
+
+* なにか初期データを生成しつつ、その値を参照したい場合に利用する
+* let! や before の処理順は定義順なので注意
+
+```ruby
+describe "Tes" do
+  let(:user) { User.create(name: "homu") }
+
+  # これだと動かない
+  # let(:comment) { Comment.create(text: "text", user_id: user.id) }
+
+  # テスト前に Comment を生成しておく必要がる
+
+  let(:comment) { Comment.create(text: "text", user_id: user.id) }
+  it do
+    expect(user.comments.first).to eq comment
   end
 end
 ```

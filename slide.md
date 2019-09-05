@@ -249,25 +249,25 @@ end
 
 ```ruby
 # 参照されるまで呼び出されない
-let(:mami) {  User.create(name: "homu")  }
+let(:mami) {  User.create(name: "mami")  }
 
 # テスト実行前に自動的に呼び出される
 let!(:homu) { User.create(name: "homu") }
 
 # before も同様
 before do
-   User.create(name: "mami")
+   User.create(name: "mado")
 end
 
 it do
-  # このタイミングではすでに homu や mami が生成済み
-  # homu は生成されていない
+  # このタイミングではすでに homu や mado が生成済み
+  # mami は生成されていない
 
-  # homu を呼び出した時に初めて let のブロックが呼び出される
-  homu
+  # mami を呼び出した時に初めて let のブロックが呼び出される
+  mami
 
-  # homu はメモ化されているので 1回しか呼ばれない
-  homu
+  # mami はメモ化されているので 1回しか呼ばれない
+  mami
 end
 ```
 
@@ -343,7 +343,7 @@ describe "Tes" do
 
   # テスト前に Comment を生成しておく必要がる
 
-  let(:comment) { Comment.create(text: "text", user_id: user.id) }
+  let!(:comment) { Comment.create(text: "text", user_id: user.id) }
   it do
     expect(user.comments.first).to eq comment
   end
